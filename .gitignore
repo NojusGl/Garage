@@ -1,2 +1,2 @@
 *.json
-./garage/__pycache__/*
+./garage/__pycache__/.*
