@@ -175,19 +175,15 @@ def create_app():
         if (garage != None):
             garageInfo = garage.split(':') 
             spots = int(garageInfo[1])
-            freeSpots = 0
-            occupiedSpots = 0
-            for spotNo in range(1, spots+1):
-                license = redisClient.get(spotKey(garageId, spotNo))
-                if (license == None):
-                    freeSpots += 1
-                else:
-                    occupiedSpots += 1
+
+            _, keys = redisClient.scan(match=spotKey(garageId, '*'))
+            occupiedSpots = len(keys)
+            freeSpots = spots - occupiedSpots
 
             return {
                 "freeSpots": freeSpots,
                 "occupiedSpots": occupiedSpots
-            }
+            }   
         else: 
             return {"message": "Garage not found"}, 404
 
